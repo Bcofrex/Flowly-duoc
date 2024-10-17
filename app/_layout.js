@@ -1,7 +1,11 @@
-import { Stack } from 'expo-router';
-import { StyleSheet, Image } from 'react-native';
+import { Link, Stack } from 'expo-router';
+import { StyleSheet, Image, Pressable } from 'react-native';
+import { UserIcon } from './components/Icons';
+
 
 export default function RootLayout() {
+
+
   return (
     <Stack
       screenOptions={{
@@ -12,7 +16,14 @@ export default function RootLayout() {
             source={require('../assets/Logo/logo.png')}
             style={{ width: 50, height: 50 }}
           />
-        )
+        ),
+        headerRight: () => (
+          <Link asChild href="/user">
+            <Pressable style={styles.headerRight} >
+              <UserIcon />
+            </Pressable>
+          </Link>
+        ),
       }}
     >
       <Stack.Screen
@@ -45,4 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
+  headerRight: {
+    marginRight: 15,
+  }
 })

@@ -68,7 +68,7 @@ export function SubsList() {
 
             <TouchableOpacity
                 style={styles.fab}
-                onPress={() => router.push('/subs/new_sub')}
+                onPress={() => router.push('/subs/add-subs')}
             >
                 <Text style={styles.fabText}>+</Text>
             </TouchableOpacity>
