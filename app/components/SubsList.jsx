@@ -1,89 +1,65 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import { SafeAreaView, FlatList, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import { SubscriptionContext } from '../context/SubscriptionContext'; // Importar el contexto
+import { useRouter } from 'expo-router';
 
 export function SubsList() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
-  // Data dummy de suscripciones
-  const suscripciones = [
-    {
-        id: '1',
-        nombre: 'Netflix',
-        precio: 12.990,
-        fechaFacturacion: '2024-11-01',
-        imagen: require('../../assets/ServiciosStreaming/icons8-netflix-96.png'),
-    },
-    {
-        id: '2',
-        nombre: 'Spotify',
-        precio: 9.990,
-        fechaFacturacion: '2024-11-05',
-        imagen: require('../../assets/ServiciosStreaming/icons8-spotify-96.png'),
-    },
-    {
-        id: '3',
-        nombre: 'Disney+',
-        precio: 7.990,
-        fechaFacturacion: '2024-11-10',
-        imagen: require('../../assets/ServiciosStreaming/icons8-disney-1-96.png'),
-    },
-    {
-        id: '4',
-        nombre: 'Canva',
-        precio: 12.950,
-        fechaFacturacion: '2024-11-15',
-        imagen: require('../../assets/ServiciosStreaming/icons8-canva-96.png'),
-    },
-    {
-        id: '5',
-        nombre: 'ChatGPT Plus',
-        precio: 20.00,
-        fechaFacturacion: '2024-11-20',
-        imagen: require('../../assets/ServiciosStreaming/icons8-chatear-96.png'),
-    },
-];
+  const { suscripciones, totalCostoMensual } = useContext(SubscriptionContext); // Usar el contexto
 
-// Función que renderiza cada suscripción
-    const renderItem = ({ item }) => (
-        <View style={styles.subscriptionItem}>
-            <Image source={item.imagen } style={styles.subscriptionImage} />
-            <View style={styles.subscriptionInfo}>
-                <Text style={styles.subscriptionName}>{item.nombre}</Text>
-                <Text style={styles.subscriptionPrice}>${item.precio} al mes</Text>
-                <Text style={styles.subscriptionDate}>Próxima facturación: {item.fechaFacturacion}</Text>
-            </View>
-        </View>
-    );
-    
+  // Función que renderiza cada suscripción
+  const renderItem = ({ item }) => (
+    <View style={styles.subscriptionItem}>
+      <Image source={item.imagen} style={styles.subscriptionImage} />
+      <View style={styles.subscriptionInfo}>
+        <Text style={styles.subscriptionName}>{item.nombre}</Text>
+        <Text style={styles.subscriptionPrice}>${item.precio} al mes</Text>
+        <Text style={styles.subscriptionDate}>Próxima facturación: {item.fechaFacturacion}</Text>
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-            <FlatList
-                data={suscripciones}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.listContent}
-            />
+      {/* Mostrar mensaje si no hay suscripciones */}
+      {suscripciones.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No tienes suscripciones. ¡Crea una nueva!</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={suscripciones}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
 
-            <TouchableOpacity
-                style={styles.fab}
-                onPress={() => router.push('/subs/add-subs')}
-            >
-                <Text style={styles.fabText}>+</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
-  )
-};
+      {/* Botón flotante para agregar una nueva suscripción */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/subs/add-subs')}
+      >
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
 
+      {/* Footer con el total de los costos mensuales */}
+      <View style={styles.footer}>
+        <Text style={styles.totalText}>Total mensual: ${totalCostoMensual.toFixed(2)}</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
     padding: 24,
-    backgroundColor: "#f8f8f8"
+    backgroundColor: "#f8f8f8",
   },
-
   listContent: {
     padding: 20,
   },
@@ -125,7 +101,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: 20,
-    bottom: 20,
+    bottom: 80, // Espacio para que no choque con el footer
     backgroundColor: '#007AFF',
     width: 60,
     height: 60,
@@ -141,6 +117,32 @@ const styles = StyleSheet.create({
   fabText: {
     color: '#fff',
     fontSize: 28,
+    fontWeight: 'bold',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#999',
+    textAlign: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  totalText: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

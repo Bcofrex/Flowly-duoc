@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "^8.0.1",
+    "@react-native-picker/picker": "^2.8.1",
     "expo": "~51.0.38",
     "expo-router": "^3.5.23",
     "expo-status-bar": "~1.12.1",
