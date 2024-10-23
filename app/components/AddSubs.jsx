@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-export default function CrearSuscripcion() {
+export function AddSubs() {
   // Estados para los valores del formulario
   const [nombre, setNombre] = useState('');
   const [costo, setCosto] = useState('');
