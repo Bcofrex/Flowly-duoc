@@ -11,11 +11,15 @@ export const SubscriptionProvider = ({ children }) => {
   // Función para agregar una nueva suscripción
   const agregarSuscripcion = (nuevaSuscripcion) => {
     setSuscripciones((prevSubs) => [...prevSubs, nuevaSuscripcion]);
-    setTotalCostoMensual((prevTotal) => prevTotal + parseFloat(nuevaSuscripcion.precio));
+    setTotalCostoMensual(
+      (prevTotal) => prevTotal + parseFloat(nuevaSuscripcion.precio)
+    );
   };
 
   return (
-    <SubscriptionContext.Provider value={{ suscripciones, totalCostoMensual, agregarSuscripcion }}>
+    <SubscriptionContext.Provider
+      value={{ suscripciones, totalCostoMensual, agregarSuscripcion }}
+    >
       {children}
     </SubscriptionContext.Provider>
   );

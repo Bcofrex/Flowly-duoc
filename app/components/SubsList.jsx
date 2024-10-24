@@ -1,5 +1,12 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { SubscriptionContext } from '../context/SubscriptionContext'; // Importar el contexto
 import { useRouter } from 'expo-router';
@@ -15,7 +22,9 @@ export function SubsList() {
       <View style={styles.subscriptionInfo}>
         <Text style={styles.subscriptionName}>{item.nombre}</Text>
         <Text style={styles.subscriptionPrice}>${item.precio} al mes</Text>
-        <Text style={styles.subscriptionDate}>Próxima facturación: {item.fechaFacturacion}</Text>
+        <Text style={styles.subscriptionDate}>
+          Próxima facturación: {item.fechaFacturacion}
+        </Text>
       </View>
     </View>
   );
@@ -25,7 +34,9 @@ export function SubsList() {
       {/* Mostrar mensaje si no hay suscripciones */}
       {suscripciones.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No tienes suscripciones. ¡Crea una nueva!</Text>
+          <Text style={styles.emptyText}>
+            No tienes suscripciones. ¡Crea una nueva!
+          </Text>
         </View>
       ) : (
         <FlatList
@@ -46,7 +57,9 @@ export function SubsList() {
 
       {/* Footer con el total de los costos mensuales */}
       <View style={styles.footer}>
-        <Text style={styles.totalText}>Total mensual: ${totalCostoMensual.toFixed(2)}</Text>
+        <Text style={styles.totalText}>
+          Total mensual: ${totalCostoMensual.toFixed(2)}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -58,10 +71,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     padding: 24,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8'
   },
   listContent: {
-    padding: 20,
+    padding: 20
   },
   subscriptionItem: {
     flexDirection: 'row',
@@ -70,33 +83,33 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 5, height: 5},
+    shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 3,
+    elevation: 3
   },
   subscriptionImage: {
     width: 40,
     height: 40,
     borderRadius: 30,
-    marginRight: 15,
+    marginRight: 15
   },
   subscriptionInfo: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   subscriptionName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 5
   },
   subscriptionPrice: {
     fontSize: 16,
-    color: '#666',
+    color: '#666'
   },
   subscriptionDate: {
     fontSize: 14,
-    color: '#999',
+    color: '#999'
   },
   fab: {
     position: 'absolute',
@@ -112,22 +125,22 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 5,
+    elevation: 5
   },
   fabText: {
     color: '#fff',
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   emptyText: {
     fontSize: 18,
     color: '#999',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   footer: {
     position: 'absolute',
@@ -139,10 +152,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: '#ddd'
   },
   totalText: {
     fontSize: 18,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'
+  }
 });

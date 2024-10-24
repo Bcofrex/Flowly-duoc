@@ -45,6 +45,7 @@ $RECYCLE.BIN/
 *.env
 *.local
 
+
 # Ignorar archivos de caché de npm y archivos de pruebas temporales
 .npm/
 .cache/
@@ -59,4 +60,6 @@ expo-env.d.ts
 *.ntvs*
 *.njsproj
 *.sln
+
+*.js text eol=lf
 

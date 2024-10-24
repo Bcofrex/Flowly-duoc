@@ -1,5 +1,15 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  FlatList,
+  Image
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SubscriptionContext } from '../context/SubscriptionContext'; // Importar el contexto
@@ -7,22 +17,42 @@ import { useRouter } from 'expo-router';
 
 // Lista de suscripciones disponibles
 const availableSubscriptions = [
-  { id: '1', nombre: 'Netflix', imagen: require('../../assets/ServiciosStreaming/icons8-netflix-96.png') },
-  { id: '2', nombre: 'Spotify', imagen: require('../../assets/ServiciosStreaming/icons8-spotify-96.png') },
-  { id: '3', nombre: 'Disney+', imagen: require('../../assets/ServiciosStreaming/icons8-disney-1-96.png') },
-  { id: '4', nombre: 'Canva', imagen: require('../../assets/ServiciosStreaming/icons8-canva-96.png') },
-  { id: '5', nombre: 'ChatGPT Plus', imagen: require('../../assets/ServiciosStreaming/icons8-chatear-96.png') },
+  {
+    id: '1',
+    nombre: 'Netflix',
+    imagen: require('../../assets/ServiciosStreaming/icons8-netflix-96.png')
+  },
+  {
+    id: '2',
+    nombre: 'Spotify',
+    imagen: require('../../assets/ServiciosStreaming/icons8-spotify-96.png')
+  },
+  {
+    id: '3',
+    nombre: 'Disney+',
+    imagen: require('../../assets/ServiciosStreaming/icons8-disney-1-96.png')
+  },
+  {
+    id: '4',
+    nombre: 'Canva',
+    imagen: require('../../assets/ServiciosStreaming/icons8-canva-96.png')
+  },
+  {
+    id: '5',
+    nombre: 'ChatGPT Plus',
+    imagen: require('../../assets/ServiciosStreaming/icons8-chatear-96.png')
+  }
 ];
 
 // Planes específicos de cada suscripción
 const subscriptionPlans = {
-  'Netflix': [
+  Netflix: [
     { label: 'Básico', value: 'Básico', price: 6540 },
     { label: 'Estándar', value: 'Estándar', price: 9190 },
     { label: 'Premium', value: 'Premium', price: 11790 },
     { label: 'Personalizado', value: 'personalizado' }
   ],
-  'Spotify': [
+  Spotify: [
     { label: 'Individual', value: 'Individual', price: 4940 },
     { label: 'Duo', value: 'Duo', price: 6360 },
     { label: 'Familiar', value: 'Familiar', price: 8060 },
@@ -33,7 +63,7 @@ const subscriptionPlans = {
     { label: 'Premium', value: 'Premium', price: 10500 },
     { label: 'Personalizado', value: 'personalizado' }
   ],
-  'Canva': [
+  Canva: [
     { label: 'Pro', value: 'Pro', price: 12490 },
     { label: 'Empresa', value: 'Empresa', price: 27990 },
     { label: 'Personalizado', value: 'personalizado' }
@@ -41,7 +71,7 @@ const subscriptionPlans = {
   'ChatGPT Plus': [
     { label: 'Plus', value: 'Plus', price: 20000 },
     { label: 'Personalizado', value: 'personalizado' }
-  ],
+  ]
 };
 
 export function AddSubs() {
@@ -70,7 +100,9 @@ export function AddSubs() {
   // Función para manejar la selección de un plan
   const handlePlanChange = (selectedPlan) => {
     setPlan(selectedPlan);
-    const planInfo = subscriptionPlans[selectedSubscription.nombre].find(p => p.value === selectedPlan);
+    const planInfo = subscriptionPlans[selectedSubscription.nombre].find(
+      (p) => p.value === selectedPlan
+    );
     if (planInfo && selectedPlan !== 'personalizado') {
       setCosto(planInfo.price.toString());
       setNombre(planInfo.label);
@@ -93,14 +125,16 @@ export function AddSubs() {
       nombre: selectedSubscription.nombre,
       precio: parseFloat(costo),
       fechaFacturacion: fecha,
-      imagen: selectedSubscription.imagen,
+      imagen: selectedSubscription.imagen
     };
 
     // Agregar la nueva suscripción al contexto
     agregarSuscripcion(nuevaSuscripcion);
 
     // Limpiar los campos y redirigir al home
-    setMensaje(`Suscripción añadida: ${selectedSubscription.nombre} con un costo de $${costo}`);
+    setMensaje(
+      `Suscripción añadida: ${selectedSubscription.nombre} con un costo de $${costo}`
+    );
     setSelectedSubscription(null);
     setCosto('');
     setFecha('');
@@ -114,8 +148,15 @@ export function AddSubs() {
       <Text style={styles.title}>Agregar Nueva Suscripción</Text>
 
       {/* Botón para abrir el modal de selección de suscripción */}
-      <TouchableOpacity style={styles.selectButton} onPress={() => setModalVisible(true)}>
-        <Text>{selectedSubscription ? selectedSubscription.nombre : 'Seleccionar suscripción'}</Text>
+      <TouchableOpacity
+        style={styles.selectButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text>
+          {selectedSubscription
+            ? selectedSubscription.nombre
+            : 'Seleccionar suscripción'}
+        </Text>
       </TouchableOpacity>
 
       {/* Modal para seleccionar suscripción */}
@@ -127,8 +168,14 @@ export function AddSubs() {
               keyExtractor={(item) => item.id}
               numColumns={2}
               renderItem={({ item }) => (
-                <TouchableOpacity style={styles.subscriptionItem} onPress={() => selectSubscription(item)}>
-                  <Image source={item.imagen} style={styles.subscriptionImage} />
+                <TouchableOpacity
+                  style={styles.subscriptionItem}
+                  onPress={() => selectSubscription(item)}
+                >
+                  <Image
+                    source={item.imagen}
+                    style={styles.subscriptionImage}
+                  />
                   <Text>{item.nombre}</Text>
                 </TouchableOpacity>
               )}
@@ -147,7 +194,11 @@ export function AddSubs() {
         >
           <Picker.Item label="Seleccionar plan" value="" />
           {subscriptionPlans[selectedSubscription.nombre].map((plan) => (
-            <Picker.Item key={plan.value} label={`${plan.label} - CLP ${plan.price}`} value={plan.value} />
+            <Picker.Item
+              key={plan.value}
+              label={`${plan.label} - CLP ${plan.price}`}
+              value={plan.value}
+            />
           ))}
         </Picker>
       )}
@@ -172,7 +223,9 @@ export function AddSubs() {
 
       {/* Input para seleccionar fecha con Date Picker */}
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.datePicker}>{fecha ? fecha : 'Seleccionar fecha de facturación'}</Text>
+        <Text style={styles.datePicker}>
+          {fecha ? fecha : 'Seleccionar fecha de facturación'}
+        </Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
@@ -201,13 +254,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 20
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   selectButton: {
     borderWidth: 1,
@@ -215,13 +268,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -232,24 +285,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    elevation: 5,
+    elevation: 5
   },
   subscriptionItem: {
     margin: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   subscriptionImage: {
     width: 70,
     height: 70,
-    marginBottom: 10,
+    marginBottom: 10
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 20
   },
   datePicker: {
     fontSize: 16,
@@ -258,11 +311,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   message: {
     marginTop: 20,
     textAlign: 'center',
-    color: 'green',
-  },
+    color: 'green'
+  }
 });

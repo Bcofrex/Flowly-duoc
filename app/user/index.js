@@ -3,11 +3,11 @@ import { View, Text, Button, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function Perfil() {
-  const router = useRouter(); 
-  const [user, setUser] = useState({
+  const router = useRouter();
+  const [user] = useState({
     nombre: 'Juan Pérez',
     email: 'juan.perez@email.com',
-    avatar: 'https://via.placeholder.com/100', 
+    avatar: 'https://via.placeholder.com/100'
   });
 
   // Función para cerrar sesión
@@ -39,26 +39,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 20
   },
   profileContainer: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 40
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 20
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 10
   },
   email: {
     fontSize: 16,
     color: 'gray',
-    marginBottom: 20,
-  },
+    marginBottom: 20
+  }
 });

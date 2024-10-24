@@ -8,8 +8,8 @@ export default function RootLayout() {
     <SubscriptionProvider>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: "#004080" },
-          headerTintColor: "white",
+          headerStyle: { backgroundColor: '#004080' },
+          headerTintColor: 'white',
           headerLeft: () => (
             <Image
               source={require('../assets/Logo/logo.png')}
@@ -18,17 +18,14 @@ export default function RootLayout() {
           ),
           headerRight: () => (
             <Link asChild href="/user">
-              <Pressable style={styles.headerRight} >
+              <Pressable style={styles.headerRight}>
                 <UserIcon />
               </Pressable>
             </Link>
-          ),
+          )
         }}
       >
-        <Stack.Screen
-          name="index"
-          options={{ title: 'Inicio de sesión' }}
-        />
+        <Stack.Screen name="index" options={{ title: 'Inicio de sesión' }} />
         <Stack.Screen
           name="subs/index"
           options={{ title: 'Tus suscripciones' }}
@@ -37,10 +34,7 @@ export default function RootLayout() {
           name="subs/add-subs"
           options={{ title: 'Agregar suscripción' }}
         />
-        <Stack.Screen
-          name="user/index"
-          options={{ title: 'Tu perfil' }}
-        />
+        <Stack.Screen name="user/index" options={{ title: 'Tu perfil' }} />
         <Stack.Screen
           name="user/edit_user"
           options={{ title: 'Editar perfil' }}
@@ -53,9 +47,9 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: 'black'
   },
   headerRight: {
-    marginRight: 15,
+    marginRight: 15
   }
 });
