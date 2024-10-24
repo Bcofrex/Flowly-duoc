@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119064629557",
+    "project_id": "flowly-duoc",
+    "storage_bucket": "flowly-duoc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119064629557:android:0e9732a329ff523424bc7c",
+        "android_client_info": {
+          "package_name": "com.flowly.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvJzVX6Firmln1rVUmONMVW8ii9aIzhhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
