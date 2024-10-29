@@ -2,51 +2,13 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { SubscriptionContext } from '../context/SubscriptionContext'; // Importar el contexto
+import { SubscriptionContext } from '../context/SubscriptionContext';
+import { availableSubscriptions, subscriptionPlans } from '../data/subscriptionData'; 
 import { useRouter } from 'expo-router';
-
-// Lista de suscripciones disponibles
-const availableSubscriptions = [
-  { id: '1', nombre: 'Netflix', imagen: require('../../assets/ServiciosStreaming/icons8-netflix-96.png') },
-  { id: '2', nombre: 'Spotify', imagen: require('../../assets/ServiciosStreaming/icons8-spotify-96.png') },
-  { id: '3', nombre: 'Disney+', imagen: require('../../assets/ServiciosStreaming/icons8-disney-1-96.png') },
-  { id: '4', nombre: 'Canva', imagen: require('../../assets/ServiciosStreaming/icons8-canva-96.png') },
-  { id: '5', nombre: 'ChatGPT Plus', imagen: require('../../assets/ServiciosStreaming/icons8-chatear-96.png') },
-];
-
-// Planes específicos de cada suscripción
-const subscriptionPlans = {
-  'Netflix': [
-    { label: 'Básico', value: 'Básico', price: 6540 },
-    { label: 'Estándar', value: 'Estándar', price: 9190 },
-    { label: 'Premium', value: 'Premium', price: 11790 },
-    { label: 'Personalizado', value: 'personalizado' }
-  ],
-  'Spotify': [
-    { label: 'Individual', value: 'Individual', price: 4940 },
-    { label: 'Duo', value: 'Duo', price: 6360 },
-    { label: 'Familiar', value: 'Familiar', price: 8060 },
-    { label: 'Personalizado', value: 'personalizado' }
-  ],
-  'Disney+': [
-    { label: 'Estándar', value: 'Estándar', price: 7700 },
-    { label: 'Premium', value: 'Premium', price: 10500 },
-    { label: 'Personalizado', value: 'personalizado' }
-  ],
-  'Canva': [
-    { label: 'Pro', value: 'Pro', price: 12490 },
-    { label: 'Empresa', value: 'Empresa', price: 27990 },
-    { label: 'Personalizado', value: 'personalizado' }
-  ],
-  'ChatGPT Plus': [
-    { label: 'Plus', value: 'Plus', price: 20000 },
-    { label: 'Personalizado', value: 'personalizado' }
-  ],
-};
 
 export function AddSubs() {
   const router = useRouter();
-  const { agregarSuscripcion } = useContext(SubscriptionContext); // Usar el contexto
+  const { agregarSuscripcion } = useContext(SubscriptionContext);
 
   // Estados para manejar el formulario
   const [nombre, setNombre] = useState('');
@@ -63,8 +25,8 @@ export function AddSubs() {
   const selectSubscription = (subscription) => {
     setSelectedSubscription(subscription);
     setModalVisible(false);
-    setPlan(''); // Reiniciar el plan cuando se selecciona una nueva suscripción
-    setCosto(''); // Limpiar el costo
+    setPlan('');
+    setCosto('');
   };
 
   // Función para manejar la selección de un plan
@@ -89,14 +51,13 @@ export function AddSubs() {
 
     // Crear el objeto de la nueva suscripción
     const nuevaSuscripcion = {
-      id: Math.random().toString(), // Generar un id único
+      id: Math.random().toString(),
       nombre: selectedSubscription.nombre,
       precio: parseFloat(costo),
       fechaFacturacion: fecha,
       imagen: selectedSubscription.imagen,
     };
 
-    // Agregar la nueva suscripción al contexto
     agregarSuscripcion(nuevaSuscripcion);
 
     // Limpiar los campos y redirigir al home
@@ -106,7 +67,7 @@ export function AddSubs() {
     setFecha('');
     setPlan('');
     setShowCustomPlan(false);
-    router.push('/subs'); // Redirigir al home
+    router.push('/subs');
   };
 
   return (
@@ -147,7 +108,7 @@ export function AddSubs() {
         >
           <Picker.Item label="Seleccionar plan" value="" />
           {subscriptionPlans[selectedSubscription.nombre].map((plan) => (
-            <Picker.Item key={plan.value} label={`${plan.label} - CLP ${plan.price}`} value={plan.value} />
+            <Picker.Item key={plan.value} label={`${plan.label} - CLP ${plan.price || 'Personalizado'}`} value={plan.value} />
           ))}
         </Picker>
       )}
@@ -172,7 +133,7 @@ export function AddSubs() {
 
       {/* Input para seleccionar fecha con Date Picker */}
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.datePicker}>{fecha ? fecha : 'Seleccionar fecha de facturación'}</Text>
+        <Text style={styles.datePicker}>{fecha || 'Seleccionar fecha de facturación'}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
