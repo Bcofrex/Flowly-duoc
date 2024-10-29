@@ -1,7 +1,8 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { UserIcon } from './components/Icons';
-import { SubscriptionProvider } from './context/SubscriptionContext'; // Importar el proveedor
+import { SubscriptionProvider } from './context/SubscriptionContext'; 
+import { availableSubscriptions } from './data/subscriptionData';
 
 export default function RootLayout() {
   return (
@@ -36,6 +37,16 @@ export default function RootLayout() {
         <Stack.Screen
           name="subs/add-subs"
           options={{ title: 'Agregar suscripción' }}
+        />
+        <Stack.Screen 
+          name="subs/details/[id]" 
+          options={({ route }) => {
+            const { id } = route.params;
+            const subscription = availableSubscriptions.find((sub) => sub.id === id);
+            return {
+              title: subscription ? subscription.nombre : 'Detalle de suscripción',
+            };
+          }}
         />
         <Stack.Screen
           name="user/index"
