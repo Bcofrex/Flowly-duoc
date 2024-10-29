@@ -12,7 +12,6 @@ const SubscriptionDetails = () => {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
-  // Encuentra la suscripción activa del usuario
   const subscription = suscripciones.find((sub) => sub.id === id);
   const availablePlans = subscription ? subscriptionPlans[subscription.nombre] || [] : [];
 
@@ -26,10 +25,6 @@ const SubscriptionDetails = () => {
   useEffect(() => {
     if (subscription) {
       navigation.setOptions({ title: subscription.nombre });
-    } else {
-      Alert.alert('Error', 'Suscripción no encontrada', [
-        { text: 'OK', onPress: () => router.replace('/subs') }
-      ]);
     }
   }, [subscription, navigation]);
 
@@ -56,12 +51,18 @@ const SubscriptionDetails = () => {
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Eliminar', style: 'destructive', onPress: () => {
             deleteSubscription(id);
-            router.replace('/subs'); // Redirige al Home tras eliminar
+            setTimeout(() => {
+              router.replace('/subs');
+            }, 100); 
           }
         }
       ]
     );
   };
+
+  if (!subscription) {
+    return null; 
+  }
 
   return (
     <View style={styles.container}>
@@ -104,15 +105,20 @@ const SubscriptionDetails = () => {
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
-          value={new Date(billingDate || Date.now())}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || new Date();
-            setShowDatePicker(false);
-            setBillingDate(currentDate.toISOString().split('T')[0]);
-          }}
-        />
+        value={new Date(billingDate || Date.now())}
+        mode="date"
+        display="default"
+        onChange={(event, selectedDate) => {
+          if (selectedDate) {
+            const adjustedDate = new Date(
+              selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+            ).toISOString().split('T')[0];
+            setBillingDate(adjustedDate);
+          }
+          setShowDatePicker(false);
+        }}
+      />
+      
       )}
 
       <Button title="Guardar Cambios" onPress={handleSave} />
