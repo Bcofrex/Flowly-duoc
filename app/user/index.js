@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, Button, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+
+import styles from '../styles/views/index-user-styles';
 
 export default function Perfil() {
   const router = useRouter(); 
@@ -34,31 +36,4 @@ export default function Perfil() {
   );
 }
 
-// Estilos para la vista de perfil
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  profileContainer: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  email: {
-    fontSize: 16,
-    color: 'gray',
-    marginBottom: 20,
-  },
-});
+

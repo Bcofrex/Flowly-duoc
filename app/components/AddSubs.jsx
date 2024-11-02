@@ -1,16 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TextInput, Button, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRouter } from 'expo-router';
+
 import { SubscriptionContext } from '../context/SubscriptionContext';
 import { getAvailableSubscriptions, getSubscriptionPlans } from '../data/subscriptionData';
-import { useRouter } from 'expo-router';
+
+import styles from '../styles/components/add-subs-styles';
 
 export function AddSubs() {
   const router = useRouter();
   const { agregarSuscripcion } = useContext(SubscriptionContext);
 
-  // Estados para manejar el formulario
   const [nombre, setNombre] = useState('');
   const [costo, setCosto] = useState('');
   const [fecha, setFecha] = useState('');
@@ -23,7 +25,6 @@ export function AddSubs() {
   const [showCustomPlan, setShowCustomPlan] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Cargar suscripciones disponibles al montar el componente
   useEffect(() => {
     const fetchSubscriptions = async () => {
       const subscriptions = await getAvailableSubscriptions();
@@ -32,22 +33,19 @@ export function AddSubs() {
     fetchSubscriptions();
   }, []);
 
-  // Manejar selección de servicio y cargar planes disponibles
   const selectSubscription = async (subscription) => {
     setSelectedSubscription(subscription);
     setModalVisible(false);
     setPlan('');
     setCosto('');
-
-    // Obtener planes para la suscripción seleccionada
     const plans = await getSubscriptionPlans(subscription.nombre);
     setAvailablePlans(plans);
   };
 
-  // Manejar selección de plan
   const handlePlanChange = (selectedPlan) => {
     setPlan(selectedPlan);
-    const planInfo = availablePlans.find(p => p.value === selectedPlan);
+    const planInfo = availablePlans.find((p) => p.value === selectedPlan);
+
     if (planInfo && selectedPlan !== 'personalizado') {
       setCosto(planInfo.price.toString());
       setNombre(planInfo.label);
@@ -57,7 +55,12 @@ export function AddSubs() {
     }
   };
 
-  // Manejar envío del formulario
+  const handleDateSelect = (event, selectedDate) => {
+    const currentDate = selectedDate || new Date();
+    setShowDatePicker(false);
+    setFecha(currentDate.toISOString().split('T')[0]);
+  };
+
   const handleSubmit = () => {
     if (!selectedSubscription || costo === '' || fecha === '') {
       setMensaje('Por favor, rellena todos los campos.');
@@ -84,8 +87,8 @@ export function AddSubs() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Agregar Nueva Suscripción</Text>
 
+      <Text style={styles.stepTitle}>Seleccionar Suscripción</Text>
       <TouchableOpacity style={styles.selectButton} onPress={() => setModalVisible(true)}>
         <Text>{selectedSubscription ? selectedSubscription.nombre : 'Seleccionar suscripción'}</Text>
       </TouchableOpacity>
@@ -93,14 +96,15 @@ export function AddSubs() {
       <Modal visible={modalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Suscripciones disponibles</Text>
             <FlatList
               data={availableSubscriptions}
               keyExtractor={(item) => item.id}
-              numColumns={2}
+              numColumns={3}
               renderItem={({ item }) => (
                 <TouchableOpacity style={styles.subscriptionItem} onPress={() => selectSubscription(item)}>
                   <Image source={item.imagen} style={styles.subscriptionImage} />
-                  <Text>{item.nombre}</Text>
+                  <Text style={styles.subscriptionText}>{item.nombre}</Text>
                 </TouchableOpacity>
               )}
             />
@@ -109,7 +113,8 @@ export function AddSubs() {
         </View>
       </Modal>
 
-      {selectedSubscription && (
+      <View style={styles.stepContainer}>
+        <Text style={styles.stepTitle}>Selecciona un Plan</Text>
         <Picker
           selectedValue={plan}
           onValueChange={handlePlanChange}
@@ -120,10 +125,11 @@ export function AddSubs() {
             <Picker.Item key={plan.value} label={`${plan.label} - CLP ${plan.price || 'Personalizado'}`} value={plan.value} />
           ))}
         </Picker>
-      )}
+      </View>
 
       {showCustomPlan && (
-        <View>
+        <View style={styles.stepContainer}>
+          <Text style={styles.stepTitle}>Plan Personalizado</Text>
           <TextInput
             style={styles.input}
             placeholder="Nombre del plan"
@@ -140,21 +146,20 @@ export function AddSubs() {
         </View>
       )}
 
-      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.datePicker}>{fecha || 'Seleccionar fecha de facturación'}</Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          value={new Date()}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || new Date();
-            setShowDatePicker(false);
-            setFecha(currentDate.toISOString().split('T')[0]);
-          }}
-        />
-      )}
+      <View style={styles.stepContainer}>
+        <Text style={styles.stepTitle}>Fecha de Facturación</Text>
+        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+          <Text style={styles.datePicker}>{fecha || 'Seleccionar fecha de facturación'}</Text>
+        </TouchableOpacity>
+        {showDatePicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateSelect}
+          />
+        )}
+      </View>
 
       <Button title="Agregar Suscripción" onPress={handleSubmit} />
 
@@ -162,84 +167,3 @@ export function AddSubs() {
     </View>
   );
 }
-
-// Estilos para el formulario y el modal
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  selectButton: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  subscriptionItem: {
-    flex: 1, 
-    margin: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-  },
-  subscriptionImage: {
-    width: 50,
-    height: 50,
-    marginBottom: 5,
-  },
-  subscriptionText: {
-    fontSize: 12,
-    textAlign: 'center',
-    flexWrap: 'wrap', 
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-  },
-  datePicker: {
-    fontSize: 16,
-    padding: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    textAlign: 'center',
-  },
-  message: {
-    marginTop: 20,
-    textAlign: 'center',
-    color: 'green',
-  },
-});

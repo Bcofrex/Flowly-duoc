@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { subscriptionPlans } from '../../data/subscriptionData';
 import { SubscriptionContext } from '../../context/SubscriptionContext';
+
+import styles from '../../styles/views/id-styles';
 
 const SubscriptionDetails = () => {
   const { suscripciones, editSubscription, deleteSubscription } = useContext(SubscriptionContext);
@@ -126,38 +129,5 @@ const SubscriptionDetails = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-  },
-  datePicker: {
-    fontSize: 16,
-    padding: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    textAlign: 'center',
-  },
-});
 
 export default SubscriptionDetails;

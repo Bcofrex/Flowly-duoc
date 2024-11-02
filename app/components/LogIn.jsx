@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
 import { useRouter } from 'expo-router';
+
+import styles from '../styles/components/login-styles';
 
 export function LogIn() {
   const [username, setUsername] = useState('');
@@ -48,28 +50,3 @@ export function LogIn() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-  },
-  error: {
-    marginTop: 20,
-    textAlign: 'center',
-    color: 'red',
-  },
-});

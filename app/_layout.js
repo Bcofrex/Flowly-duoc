@@ -1,8 +1,11 @@
 import { Link, Stack } from 'expo-router';
-import { StyleSheet, Image, Pressable } from 'react-native';
-import { UserIcon } from './components/Icons';
+import { Image, Pressable } from 'react-native';
+
 import { SubscriptionProvider } from './context/SubscriptionContext'; 
 import { availableSubscriptions } from './data/subscriptionData';
+import { UserIcon } from './components/Icons';
+
+import styles from './styles/layout-styles';
 
 export default function RootLayout() {
   return (
@@ -60,13 +63,3 @@ export default function RootLayout() {
     </SubscriptionProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-  },
-  headerRight: {
-    marginRight: 15,
-  }
-});

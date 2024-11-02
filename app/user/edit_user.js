@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+
+import styles from '../styles/views/edit-user-styles';
 
 export default function EditarPerfil() {
   const router = useRouter(); // Para redirigir al perfil después de guardar
@@ -44,24 +46,4 @@ export default function EditarPerfil() {
   );
 }
 
-// Estilos para la vista de edición de perfil
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-  },
-});
+
