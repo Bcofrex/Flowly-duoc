@@ -24,6 +24,28 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       color: 'red',
     },
+    infoContainer: {
+      marginTop: 50,
+      alignItems: 'center',
+      padding: 10,
+      backgroundColor: '#ffe5e5', 
+      borderRadius: 8,
+    },
+    infoTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: 'red',
+      marginBottom: 10,
+    },
+    infoText: {
+      fontSize: 16,
+      color: '#333',
+      marginBottom: 5,
+    },
+    bold: {
+      fontWeight: 'bold',
+      color: 'red',
+    },
   });
 
 export default styles;

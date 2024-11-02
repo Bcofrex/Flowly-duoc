@@ -46,6 +46,13 @@ export function LogIn() {
 
       {/* Mensaje de error */}
       {error ? <Text style={styles.error}>{error}</Text> : null}
+  
+      {/* Información de inicio de sesión */}
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoTitle}>Credenciales temporales</Text>
+        <Text style={styles.infoText}>Usuario: <Text style={styles.bold}>Admin</Text></Text>
+        <Text style={styles.infoText}>Password: <Text style={styles.bold}>Admin</Text></Text>
+      </View>
     </View>
   );
 }
