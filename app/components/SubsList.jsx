@@ -7,6 +7,12 @@ import { SubscriptionContext } from '../context/SubscriptionContext';
 
 import styles from '../styles/components/sub-list-styles';
 
+// Función para formatear los precios con puntos en los miles
+const formatPrice = (price) => {
+  if (!price) return '0'; // Devuelve '0' si el precio es undefined o null
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
 export function SubsList() {
   const router = useRouter();
   const { suscripciones, totalCostoMensual } = useContext(SubscriptionContext);
@@ -21,8 +27,8 @@ export function SubsList() {
       <Image source={item.imagen} style={styles.subscriptionImage} />
       <View style={styles.subscriptionInfo}>
         <Text style={styles.subscriptionName}>{item.nombre}</Text>
-        <Text style={styles.subscriptionPrice}>${item.precio} al mes</Text>
-        <Text style={styles.subscriptionDate}>Próxima facturación: {item.fechaFacturacion}</Text>
+        <Text style={styles.subscriptionPrice}>${formatPrice(item.precio)} al mes</Text>
+        <Text style={styles.subscriptionDate}>Facturación el día {item.fechaFacturacion} de cada mes</Text>
       </View>
     </TouchableOpacity>
   );
@@ -53,9 +59,8 @@ export function SubsList() {
 
       {/* Footer con el total de los costos mensuales */}
       <View style={styles.footer}>
-        <Text style={styles.totalText}>Total mensual: ${totalCostoMensual}</Text>
+        <Text style={styles.totalText}>Total mensual: ${formatPrice(totalCostoMensual)}</Text>
       </View>
     </SafeAreaView>
   );
 }
-
