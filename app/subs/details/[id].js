@@ -1,131 +1,89 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
-import { Picker } from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { subscriptionPlans } from '../../data/subscriptionData';
-import { SubscriptionContext } from '../../context/SubscriptionContext';
-
-import styles from '../../styles/views/id-styles';
+import { SubscriptionContext } from '../../context/SubscriptionContext'; 
 
 const SubscriptionDetails = () => {
+  const { id } = useLocalSearchParams();
   const { suscripciones, editSubscription, deleteSubscription } = useContext(SubscriptionContext);
   const router = useRouter();
-  const navigation = useNavigation();
-  const { id } = useLocalSearchParams();
+  const navigation = useNavigation(); 
 
-  const subscription = suscripciones.find((sub) => sub.id === id);
-  const availablePlans = subscription ? subscriptionPlans[subscription.nombre] || [] : [];
+  const [subscription, setSubscription] = useState(null);
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
 
-  // Estados locales para los valores del formulario
-  const [planType, setPlanType] = useState(subscription?.planType || '');
-  const [customPrice, setCustomPrice] = useState(subscription?.precio?.toString() || '');
-  const [billingDate, setBillingDate] = useState(subscription?.fechaFacturacion || '');
-  const [showCustomPlan, setShowCustomPlan] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
+  // Buscar la suscripción seleccionada y actualizar el título
   useEffect(() => {
-    if (subscription) {
-      navigation.setOptions({ title: subscription.nombre });
-    }
-  }, [subscription, navigation]);
-
-  const handleSave = () => {
-    if (planType && (customPrice || !showCustomPlan) && billingDate) {
-      editSubscription(id, {
-        planType,
-        precio: showCustomPlan ? parseFloat(customPrice) : availablePlans.find(p => p.value === planType)?.price,
-        fechaFacturacion: billingDate,
-      });
-      Alert.alert('Éxito', 'Suscripción actualizada correctamente', [
-        { text: 'OK', onPress: () => router.replace('/subs') },
-      ]);
+    const foundSub = suscripciones.find((sub) => sub.id === id);
+    if (foundSub) {
+      setSubscription(foundSub);
+      setName(foundSub.nombre);
+      setPrice(String(foundSub.precio));
+      navigation.setOptions({ title: foundSub.nombre });
     } else {
-      Alert.alert('Error', 'Por favor completa todos los campos.');
+      setSubscription(null);
     }
+  }, [id, suscripciones, navigation]);
+
+  // Guardar los cambios en la suscripción
+  const handleSave = () => {
+    if (!name || !price) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    const updatedData = { nombre: name, precio: parseFloat(price) };
+    editSubscription(id, updatedData);
+    Alert.alert('Éxito', 'Suscripción editada correctamente', [
+      { text: 'OK', onPress: () => router.push('/subs') }
+    ]);
   };
 
+  // Eliminar la suscripción
   const handleDelete = () => {
     Alert.alert(
-      'Eliminar Suscripción',
+      'Confirmar eliminación',
       '¿Estás seguro de que deseas eliminar esta suscripción?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Eliminar', style: 'destructive', onPress: () => {
+        {
+          text: 'Eliminar',
+          onPress: () => {
             deleteSubscription(id);
-            setTimeout(() => {
-              router.replace('/subs');
-            }, 100); 
-          }
-        }
+            Alert.alert('Eliminada', 'La suscripción ha sido eliminada', [
+              { text: 'OK', onPress: () => router.push('/subs') }
+            ]);
+          },
+          style: 'destructive',
+        },
       ]
     );
   };
 
   if (!subscription) {
-    return null; 
+    return <Text>No se encontró la suscripción seleccionada.</Text>;
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Detalles de {subscription?.nombre}</Text>
-
-      <Text style={styles.label}>Tipo de Plan</Text>
-      <Picker
-        selectedValue={planType}
-        onValueChange={(value) => {
-          setPlanType(value);
-          if (value !== 'personalizado') {
-            const selectedPlan = availablePlans.find(p => p.value === value);
-            setCustomPrice(selectedPlan?.price.toString() || '');
-            setShowCustomPlan(false);
-          } else {
-            setShowCustomPlan(true);
-          }
-        }}
-        style={styles.input}
-      >
-        <Picker.Item label="Seleccionar plan" value="" />
-        {availablePlans.map((plan) => (
-          <Picker.Item key={plan.value} label={`${plan.label} - CLP ${plan.price || 'Personalizado'}`} value={plan.value} />
-        ))}
-      </Picker>
-
-      {showCustomPlan && (
-        <TextInput
-          style={styles.input}
-          value={customPrice}
-          onChangeText={setCustomPrice}
-          placeholder="Costo Personalizado"
-          keyboardType="numeric"
-        />
-      )}
-
-      <Text style={styles.label}>Fecha de Facturación</Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.datePicker}>{billingDate || 'Seleccionar fecha de facturación'}</Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-        value={new Date(billingDate || Date.now())}
-        mode="date"
-        display="default"
-        onChange={(event, selectedDate) => {
-          if (selectedDate) {
-            const adjustedDate = new Date(
-              selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
-            ).toISOString().split('T')[0];
-            setBillingDate(adjustedDate);
-          }
-          setShowDatePicker(false);
-        }}
+    <View style={{ padding: 20 }}>
+      <Text>Editar suscripción</Text>
+      <TextInput
+        value={name}
+        onChangeText={setName}
+        placeholder="Nombre de la suscripción"
+        style={{ marginBottom: 10, borderWidth: 1, padding: 10 }}
       />
-      
-      )}
-
-      <Button title="Guardar Cambios" onPress={handleSave} />
-      <Button title="Eliminar Suscripción" onPress={handleDelete} color="red" />
+      <TextInput
+        value={price}
+        onChangeText={setPrice}
+        placeholder="Precio mensual"
+        keyboardType="numeric"
+        style={{ marginBottom: 10, borderWidth: 1, padding: 10 }}
+      />
+      <Button title="Guardar cambios" onPress={handleSave} />
+      <Button title="Eliminar suscripción" onPress={handleDelete} color="red" />
     </View>
   );
 };

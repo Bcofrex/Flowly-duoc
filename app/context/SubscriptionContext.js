@@ -5,7 +5,7 @@ export const SubscriptionContext = createContext();
 
 // Proveedor de suscripciones
 export const SubscriptionProvider = ({ children }) => {
-  const [suscripciones, setSuscripciones] = useState([]);
+  const [suscripciones, setSuscripciones] = useState([]); // Inicializar vacío
   const [totalCostoMensual, setTotalCostoMensual] = useState(0);
 
   // Función para agregar una nueva suscripción
@@ -38,7 +38,7 @@ export const SubscriptionProvider = ({ children }) => {
 
   return (
     <SubscriptionContext.Provider value={{
-      suscripciones,
+      suscripciones,  // Solo contiene suscripciones añadidas por el usuario
       totalCostoMensual,
       agregarSuscripcion,
       editSubscription,

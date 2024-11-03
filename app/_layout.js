@@ -1,8 +1,7 @@
 import { Link, Stack } from 'expo-router';
 import { Image, Pressable } from 'react-native';
 
-import { SubscriptionProvider } from './context/SubscriptionContext'; 
-import { availableSubscriptions } from './data/subscriptionData';
+import { SubscriptionProvider } from './context/SubscriptionContext';
 import { UserIcon } from './components/Icons';
 
 import styles from './styles/layout-styles';
@@ -22,7 +21,7 @@ export default function RootLayout() {
           ),
           headerRight: () => (
             <Link asChild href="/user">
-              <Pressable style={styles.headerRight} >
+              <Pressable style={styles.headerRight}>
                 <UserIcon />
               </Pressable>
             </Link>
@@ -41,15 +40,9 @@ export default function RootLayout() {
           name="subs/add-subs"
           options={{ title: 'Agregar suscripción' }}
         />
-        <Stack.Screen 
-          name="subs/details/[id]" 
-          options={({ route }) => {
-            const { id } = route.params;
-            const subscription = availableSubscriptions.find((sub) => sub.id === id);
-            return {
-              title: subscription ? subscription.nombre : 'Detalle de suscripción',
-            };
-          }}
+        <Stack.Screen
+          name="subs/details/[id]"
+          options={{ title: 'Detalles de suscripción' }}
         />
         <Stack.Screen
           name="user/index"
