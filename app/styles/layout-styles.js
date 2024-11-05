@@ -6,7 +6,21 @@ const styles = StyleSheet.create({
       backgroundColor: "black",
     },
     headerRight: {
-      marginRight: 15,
+      marginRight: 10,
+    },
+    backButton: {
+      marginLeft: 10,
+    },
+    dropdownOverlay: {
+      width: 200,
+      padding: 4,
+      borderRadius: 10,
+      position: 'absolute',
+      top: 60,
+      right: 0,
+    },
+    menuItemText: {
+      fontSize: 14,
     }
   });
 
