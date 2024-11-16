@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import styles from '../styles/components/login-styles';
 
-export function LogIn() {
+const LogIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -57,3 +57,4 @@ export function LogIn() {
   );
 }
 
+export default LogIn;

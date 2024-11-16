@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 
 import { SubscriptionContext } from '../context/SubscriptionContext';
 import { getAvailableSubscriptions, getSubscriptionPlans } from '../data/subscriptionData';
+
 import styles from '../styles/components/add-subs-styles';
 
 // Función para formatear precios con puntos en los miles
@@ -13,7 +14,7 @@ const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
-export function AddSubs() {
+const AddSubs = () => {
   const router = useRouter();
   const { agregarSuscripcion } = useContext(SubscriptionContext);
 
@@ -216,3 +217,5 @@ export function AddSubs() {
     </View>
   );
 }
+
+export default AddSubs;

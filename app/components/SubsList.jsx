@@ -13,7 +13,7 @@ const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
-export function SubsList() {
+const SubsList = () => {
   const router = useRouter();
   const { suscripciones, totalCostoMensual } = useContext(SubscriptionContext);
 
@@ -64,3 +64,5 @@ export function SubsList() {
     </SafeAreaView>
   );
 }
+
+export default SubsList;
