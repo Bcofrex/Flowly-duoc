@@ -1,15 +1,15 @@
 // Lista de suscripciones disponibles
 export const AVAILABLE_SUBSCRIPTIONS = [
-  { id: '1', nombre: 'Netflix', imagen: require('../../assets/ServiciosStreaming/icons8-netflix-96.png') },
-  { id: '2', nombre: 'Spotify', imagen: require('../../assets/ServiciosStreaming/icons8-spotify-96.png') },
-  { id: '3', nombre: 'Disney+', imagen: require('../../assets/ServiciosStreaming/icons8-disney-1-96.png') },
-  { id: '4', nombre: 'Canva', imagen: require('../../assets/ServiciosStreaming/icons8-canva-96.png') },
-  { id: '5', nombre: 'ChatGPT Plus', imagen: require('../../assets/ServiciosStreaming/icons8-chatear-96.png') },
-  { id: '6', nombre: 'Amazon Prime', imagen: require('../../assets/ServiciosStreaming/icons8-amazon-prime-video-96.png') },
-  { id: '7', nombre: 'HBO Max', imagen: require('../../assets/ServiciosStreaming/icons8-hbo-max-100.png') },
-  { id: '8', nombre: 'YouTube Premium', imagen: require('../../assets/ServiciosStreaming/icons8-youtube-96.png') },
-  { id: '9', nombre: 'Wifi', imagen: require('../../assets/ServiciosStreaming/wifi.png') },
-  { id: '10', nombre: 'Redes Móviles', imagen: require('../../assets/ServiciosStreaming/redes-moviles.png') },
+  { id: '1', nombre: 'Netflix', imagen: require('../assets/ServiciosStreaming/icons8-netflix-96.png') },
+  { id: '2', nombre: 'Spotify', imagen: require('../assets/ServiciosStreaming/icons8-spotify-96.png') },
+  { id: '3', nombre: 'Disney+', imagen: require('../assets/ServiciosStreaming/icons8-disney-1-96.png') },
+  { id: '4', nombre: 'Canva', imagen: require('../assets/ServiciosStreaming/icons8-canva-96.png') },
+  { id: '5', nombre: 'ChatGPT Plus', imagen: require('../assets/ServiciosStreaming/icons8-chatear-96.png') },
+  { id: '6', nombre: 'Amazon Prime', imagen: require('../assets/ServiciosStreaming/icons8-amazon-prime-video-96.png') },
+  { id: '7', nombre: 'HBO Max', imagen: require('../assets/ServiciosStreaming/icons8-hbo-max-100.png') },
+  { id: '8', nombre: 'YouTube Premium', imagen: require('../assets/ServiciosStreaming/icons8-youtube-96.png') },
+  { id: '9', nombre: 'Wifi', imagen: require('../assets/ServiciosStreaming/wifi.png') },
+  { id: '10', nombre: 'Redes Móviles', imagen: require('../assets/ServiciosStreaming/redes-moviles.png') },
 ];
 
 // Planes específicos de cada suscripción

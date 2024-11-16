@@ -27,14 +27,6 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "your-app-scheme",
-    "router": {
-      "exclude": [
-        "**/constants/**/*",
-        "**/context/**/*",
-        "**/data/**/*",
-        "**/styles/**/*"
-      ]
-    }
+    "scheme": "your-app-scheme"
   }
 }

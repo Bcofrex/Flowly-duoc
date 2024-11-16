@@ -3,7 +3,7 @@ import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { SubscriptionContext } from '../context/SubscriptionContext'; 
+import { SubscriptionContext } from '../../context/SubscriptionContext'; 
 
 import styles from '../styles/components/sub-list-styles';
 

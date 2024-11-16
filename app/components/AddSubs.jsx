@@ -3,8 +3,8 @@ import { View, Text, TextInput, Button, Modal, TouchableOpacity, FlatList, Image
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 
-import { SubscriptionContext } from '../context/SubscriptionContext';
-import { getAvailableSubscriptions, getSubscriptionPlans } from '../data/subscriptionData';
+import { SubscriptionContext } from '../../context/SubscriptionContext';
+import { getAvailableSubscriptions, getSubscriptionPlans } from '../../data/subscriptionData';
 
 import styles from '../styles/components/add-subs-styles';
 

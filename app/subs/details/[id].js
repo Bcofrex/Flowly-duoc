@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 
-import { SubscriptionContext } from '../../context/SubscriptionContext'; 
+import { SubscriptionContext } from '../../../context/SubscriptionContext'; 
 
 const SubscriptionDetails = () => {
   const { id } = useLocalSearchParams();

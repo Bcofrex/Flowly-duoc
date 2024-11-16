@@ -1,7 +1,7 @@
 import { Link, Stack } from 'expo-router';
 import { Image, Pressable } from 'react-native';
 
-import { SubscriptionProvider } from './context/SubscriptionContext';
+import { SubscriptionProvider } from '../context/SubscriptionContext';
 import UserIcon from './components/Icons';
 
 import styles from './styles/layout-styles';
