@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 
 import styles from '../styles/components/login-styles';
 
 const LogIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+
   const [error, setError] = useState('');
-  const router = useRouter(); // Para redirigir al Home después del inicio de sesión
 
   const handleLogin = () => {
     // Validación simple de inicio de sesión
@@ -23,38 +25,48 @@ const LogIn = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
-      
+
       {/* Campo de usuario */}
       <TextInput
-        style={styles.input}
-        placeholder="Usuario"
+        label="Usuario"
         value={username}
-        onChangeText={(text) => setUsername(text)}
+        onChangeText={setUsername}
+        style={styles.input}
+        mode="outlined"
+        left={<TextInput.Icon name="account" />}
       />
 
       {/* Campo de contraseña */}
       <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        secureTextEntry
+        label="Contraseña"
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={setPassword}
+        style={styles.input}
+        mode="outlined"
+        secureTextEntry
+        left={<TextInput.Icon name="lock" />}
       />
 
-      {/* Botón de inicio de sesión */}
-      <Button title="Iniciar Sesión" onPress={handleLogin} />
-
       {/* Mensaje de error */}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-  
+      {error ? <HelperText type="error">{error}</HelperText> : null}
+
+      {/* Botón de inicio de sesión */}
+      <Button mode="contained" onPress={handleLogin} style={styles.button}>
+        Iniciar Sesión
+      </Button>
+
       {/* Información de inicio de sesión */}
       <View style={styles.infoContainer}>
         <Text style={styles.infoTitle}>Credenciales temporales</Text>
-        <Text style={styles.infoText}>Usuario: <Text style={styles.bold}>Admin</Text></Text>
-        <Text style={styles.infoText}>Password: <Text style={styles.bold}>Admin</Text></Text>
+        <Text style={styles.infoText}>
+          Usuario: <Text style={styles.bold}>Admin</Text>
+        </Text>
+        <Text style={styles.infoText}>
+          Contraseña: <Text style={styles.bold}>Admin</Text>
+        </Text>
       </View>
     </View>
   );
-}
+};
 
 export default LogIn;

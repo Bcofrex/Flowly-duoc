@@ -1,18 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
+import { TextInput, Button, Text, Card, ActivityIndicator } from 'react-native-paper';
 
-import { SubscriptionContext } from '../../../context/SubscriptionContext'; 
+import { SubscriptionContext } from '../../../context/SubscriptionContext';
+
+import styles from '../../styles/views/id-styles';
 
 const SubscriptionDetails = () => {
   const { id } = useLocalSearchParams();
   const { suscripciones, editSubscription, deleteSubscription } = useContext(SubscriptionContext);
   const router = useRouter();
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   const [subscription, setSubscription] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [billingDate, setBillingDate] = useState('');
+  const [loading, setLoading] = useState(true);
 
   // Buscar la suscripción seleccionada y actualizar el título
   useEffect(() => {
@@ -21,23 +26,29 @@ const SubscriptionDetails = () => {
       setSubscription(foundSub);
       setName(foundSub.nombre);
       setPrice(String(foundSub.precio));
+      setBillingDate(foundSub.fechaFacturacion);
       navigation.setOptions({ title: foundSub.nombre });
     } else {
       setSubscription(null);
     }
+    setLoading(false);
   }, [id, suscripciones, navigation]);
 
   // Guardar los cambios en la suscripción
   const handleSave = () => {
-    if (!name || !price) {
+    if (!name || !price || !billingDate) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
 
-    const updatedData = { nombre: name, precio: parseFloat(price) };
+    const updatedData = {
+      nombre: name,
+      precio: parseFloat(price),
+      fechaFacturacion: billingDate,
+    };
     editSubscription(id, updatedData);
     Alert.alert('Éxito', 'Suscripción editada correctamente', [
-      { text: 'OK', onPress: () => router.push('/subs') }
+      { text: 'OK', onPress: () => router.push('/subs') },
     ]);
   };
 
@@ -53,7 +64,7 @@ const SubscriptionDetails = () => {
           onPress: () => {
             deleteSubscription(id);
             Alert.alert('Eliminada', 'La suscripción ha sido eliminada', [
-              { text: 'OK', onPress: () => router.push('/subs') }
+              { text: 'OK', onPress: () => router.push('/subs') },
             ]);
           },
           style: 'destructive',
@@ -62,28 +73,65 @@ const SubscriptionDetails = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#004080" />
+      </View>
+    );
+  }
+
   if (!subscription) {
-    return <Text>No se encontró la suscripción seleccionada.</Text>;
+    return (
+      <View style={styles.container}>
+        <Text>No se encontró la suscripción seleccionada.</Text>
+      </View>
+    );
   }
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Editar suscripción</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder="Nombre de la suscripción"
-        style={{ marginBottom: 10, borderWidth: 1, padding: 10 }}
-      />
-      <TextInput
-        value={price}
-        onChangeText={setPrice}
-        placeholder="Precio mensual"
-        keyboardType="numeric"
-        style={{ marginBottom: 10, borderWidth: 1, padding: 10 }}
-      />
-      <Button title="Guardar cambios" onPress={handleSave} />
-      <Button title="Eliminar suscripción" onPress={handleDelete} color="red" />
+    <View style={styles.container}>
+      <Card style={styles.card}>
+        <Card.Title title="Editar Suscripción" />
+        <Card.Content>
+          {/* Campo para editar el nombre de la suscripción */}
+          <TextInput
+            label="Nombre de la Suscripción"
+            value={name}
+            onChangeText={setName}
+            style={styles.input}
+            mode="outlined"
+          />
+
+          {/* Campo para editar el precio */}
+          <TextInput
+            label="Precio Mensual"
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+            style={styles.input}
+            mode="outlined"
+          />
+
+          {/* Campo para editar la fecha de facturación */}
+          <TextInput
+            label="Fecha de Facturación"
+            value={billingDate}
+            onChangeText={setBillingDate}
+            keyboardType="numeric"
+            style={styles.input}
+            mode="outlined"
+          />
+        </Card.Content>
+        <Card.Actions style={styles.cardActions}>
+          <Button mode="contained" onPress={handleSave} style={styles.saveButton}>
+            Guardar Cambios
+          </Button>
+          <Button mode="outlined" onPress={handleDelete} style={styles.deleteButton} color="red">
+            Eliminar Suscripción
+          </Button>
+        </Card.Actions>
+      </Card>
     </View>
   );
 };

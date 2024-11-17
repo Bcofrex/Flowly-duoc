@@ -2,23 +2,24 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      padding: 10,
-      marginBottom: 20,
-    },
-  });
+    flex: 1,
+    padding: 16,
+  },
+  avatar: {
+    alignSelf: 'center',
+    marginBottom: 16,
+    backgroundColor: '#e0e0e0',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  input: {
+    marginBottom: 16,
+  },
+  button: {
+    marginTop: 16,
+  },
+});
 
 export default styles;

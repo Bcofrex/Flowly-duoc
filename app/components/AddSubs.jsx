@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, Button, Modal, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Picker } from '@react-native-picker/picker';
+import { TextInput, Button, Text, RadioButton, HelperText, Avatar } from 'react-native-paper';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { SubscriptionContext } from '../../context/SubscriptionContext';
 import { getAvailableSubscriptions, getSubscriptionPlans } from '../../data/subscriptionData';
@@ -22,9 +23,10 @@ const AddSubs = () => {
   const [costo, setCosto] = useState('');
   const [fecha, setFecha] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [planModalVisible, setPlanModalVisible] = useState(false);
-  const [dayPickerVisible, setDayPickerVisible] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState(null);
   const [availableSubscriptions, setAvailableSubscriptions] = useState([]);
   const [plan, setPlan] = useState('');
@@ -61,12 +63,13 @@ const AddSubs = () => {
       setNombre('');
       setCosto('');
       setShowCustomPlan(true);
+      setPlanModalVisible(false);
     }
   };
 
   const handleSubmit = () => {
     if (!selectedSubscription || costo === '' || fecha === '') {
-      setMensaje('Por favor, rellena todos los campos.');
+      setError('Por favor, rellena todos los campos.');
       return;
     }
 
@@ -79,7 +82,6 @@ const AddSubs = () => {
     };
 
     agregarSuscripcion(nuevaSuscripcion);
-    setMensaje(`Suscripción añadida: ${selectedSubscription.nombre} con un costo de $${costo}`);
     resetForm();
     router.push('/subs');
   };
@@ -90,33 +92,58 @@ const AddSubs = () => {
     setFecha('');
     setPlan('');
     setShowCustomPlan(false);
+    setError('');
+  };
+
+  // Funciones para el DatePicker
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const handleConfirm = (date) => {
+    const day = date.getDate();
+    setFecha(day.toString());
+    hideDatePicker();
   };
 
   return (
     <View style={styles.container}>
       {/* Selector de suscripción */}
       <Text style={styles.stepTitle}>Seleccionar Suscripción</Text>
-      <TouchableOpacity style={styles.selectButton} onPress={() => setModalVisible(true)}>
-        <Text>{selectedSubscription ? selectedSubscription.nombre : 'Seleccionar suscripción'}</Text>
-      </TouchableOpacity>
+      <Button
+        mode="outlined"
+        onPress={() => setModalVisible(true)}
+        style={styles.selectButton}
+      >
+        {selectedSubscription ? selectedSubscription.nombre : 'Seleccionar suscripción'}
+      </Button>
 
       {/* Modal para mostrar suscripciones disponibles */}
-      <Modal visible={modalVisible} animationType="fade" transparent={true}>
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Suscripciones disponibles</Text>
-            <FlatList
-              data={availableSubscriptions}
-              keyExtractor={(item) => item.id}
-              numColumns={3}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.subscriptionItem} onPress={() => selectSubscription(item)}>
-                  <Image source={item.imagen} style={styles.subscriptionImage} />
+            <ScrollView contentContainerStyle={styles.subscriptionList}>
+              {availableSubscriptions.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.subscriptionItem}
+                  onPress={() => selectSubscription(item)}
+                >
+                  <Avatar.Image
+                    source={item.imagen}
+                    size={60}
+                    style={styles.subscriptionImage}
+                  />
                   <Text style={styles.subscriptionText}>{item.nombre}</Text>
                 </TouchableOpacity>
-              )}
-            />
-            <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+              ))}
+            </ScrollView>
+            <Button onPress={() => setModalVisible(false)}>Cerrar</Button>
           </View>
         </View>
       </Modal>
@@ -124,9 +151,14 @@ const AddSubs = () => {
       {/* Botón para abrir el modal del selector de plan */}
       <View style={styles.stepContainer}>
         <Text style={styles.stepTitle}>Selecciona un Plan</Text>
-        <TouchableOpacity style={styles.selectButton} onPress={() => setPlanModalVisible(true)}>
-          <Text>{plan ? `Plan seleccionado: ${plan}` : 'Seleccionar plan'}</Text>
-        </TouchableOpacity>
+        <Button
+          mode="outlined"
+          onPress={() => setPlanModalVisible(true)}
+          style={styles.selectButton}
+          disabled={!selectedSubscription}
+        >
+          {plan ? `Plan seleccionado: ${plan}` : 'Seleccionar plan'}
+        </Button>
       </View>
 
       {/* Modal para seleccionar el plan de la suscripción */}
@@ -134,88 +166,78 @@ const AddSubs = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Seleccionar Plan</Text>
-            <Picker
-              selectedValue={plan}
-              onValueChange={handlePlanChange}
-              style={styles.picker}
-            >
-              <Picker.Item label="Seleccionar plan" value="" />
-              {availablePlans.map((plan) => (
-                <Picker.Item key={plan.value} label={`${plan.label} - CLP ${formatPrice(plan.price) || 'Personalizado'}`} value={plan.value} />
-              ))}
-            </Picker>
-            <Button title="Cerrar" onPress={() => setPlanModalVisible(false)} />
+            <RadioButton.Group onValueChange={handlePlanChange} value={plan}>
+              <ScrollView>
+                {availablePlans.map((plan) => (
+                  <RadioButton.Item
+                    key={plan.value}
+                    label={`${plan.label} - CLP $${formatPrice(plan.price)}`}
+                    value={plan.value}
+                  />
+                ))}
+                <RadioButton.Item label="Personalizado" value="personalizado" />
+              </ScrollView>
+            </RadioButton.Group>
+            <Button onPress={() => setPlanModalVisible(false)}>Cerrar</Button>
           </View>
         </View>
       </Modal>
 
       {/* Campos para el plan personalizado */}
       {showCustomPlan && (
-        <Modal visible={showCustomPlan} animationType="slide" transparent={true}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.stepTitle}>Plan Personalizado</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Nombre del plan"
-                value={nombre}
-                onChangeText={(text) => setNombre(text)}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Costo del plan"
-                keyboardType="numeric"
-                value={costo}
-                onChangeText={(text) => setCosto(formatPrice(text.replace(/\./g, '')))}
-              />
-              <Button title="Cerrar" onPress={() => setShowCustomPlan(false)} />
-            </View>
-          </View>
-        </Modal>
+        <View style={styles.stepContainer}>
+          <TextInput
+            label="Nombre del plan"
+            value={nombre}
+            onChangeText={setNombre}
+            style={styles.input}
+            mode="outlined"
+          />
+          <TextInput
+            label="Costo del plan"
+            value={costo}
+            onChangeText={(text) => setCosto(formatPrice(text.replace(/\./g, '')))}
+            style={styles.input}
+            mode="outlined"
+            keyboardType="numeric"
+          />
+        </View>
       )}
 
-      {/* Selector de día de facturación en modal */}
+      {/* Selector de día de facturación */}
       <View style={styles.stepContainer}>
         <Text style={styles.stepTitle}>Día de Facturación</Text>
-        <TouchableOpacity onPress={() => setDayPickerVisible(true)} style={styles.selectButton}>
-          <Text>{fecha || 'Seleccionar día de facturación'}</Text>
-        </TouchableOpacity>
+        <Button
+          mode="outlined"
+          onPress={showDatePicker}
+          style={styles.selectButton}
+        >
+          {fecha ? `Día ${fecha}` : 'Seleccionar día de facturación'}
+        </Button>
       </View>
 
-      <Modal visible={dayPickerVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecciona el Día de Facturación</Text>
-            <FlatList
-              data={[...Array(31)].map((_, i) => ({ day: i + 1 }))}
-              numColumns={5}
-              keyExtractor={(item) => item.day.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.dayItem,
-                    fecha === item.day.toString() && styles.dayItemSelected,
-                  ]}
-                  onPress={() => {
-                    setFecha(item.day.toString());
-                    setDayPickerVisible(false);
-                  }}
-                >
-                  <Text style={styles.dayText}>{item.day}</Text>
-                </TouchableOpacity>
-              )}
-              contentContainerStyle={styles.dayPickerContainer}
-            />
-            <Button title="Cerrar" onPress={() => setDayPickerVisible(false)} />
-          </View>
-        </View>
-      </Modal>
+      {/* DateTimePickerModal para seleccionar la fecha */}
+      <DateTimePickerModal
+        isVisible={datePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+        display="spinner"
+        locale="es-ES"
+        headerTextIOS="Elige una fecha"
+      />
+
+      {/* Mensaje de error */}
+      {error ? <HelperText type="error">{error}</HelperText> : null}
 
       {/* Botón para agregar la suscripción */}
-      <Button title="Agregar Suscripción" onPress={handleSubmit} />
+      <Button mode="contained" onPress={handleSubmit} style={styles.addButton}>
+        Agregar Suscripción
+      </Button>
+
       {mensaje ? <Text style={styles.message}>{mensaje}</Text> : null}
     </View>
   );
-}
+};
 
 export default AddSubs;

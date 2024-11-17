@@ -66,6 +66,11 @@ function CustomDrawerContent(props) {
       </TouchableOpacity>
       <View style={styles.menuItemsContainer}>
         <TouchableOpacity
+          onPress={() => {router.push('/subs/');}}
+        >
+          <Text style={styles.menuItem}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {router.push('/user/');}}
         >
           <Text style={styles.menuItem}>Tu perfil</Text>

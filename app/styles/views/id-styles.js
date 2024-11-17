@@ -1,36 +1,33 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-      backgroundColor: '#fff',
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 16,
-    },
-    label: {
-      fontSize: 16,
-      marginBottom: 8,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 8,
-      padding: 12,
-      marginBottom: 16,
-    },
-    datePicker: {
-      fontSize: 16,
-      padding: 12,
-      marginBottom: 16,
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 8,
-      textAlign: 'center',
-    },
-  });
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  card: {
+    elevation: 3,
+  },
+  input: {
+    marginBottom: 16,
+  },
+  cardActions: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  saveButton: {
+    flex: 1,
+    marginRight: 8,
+  },
+  deleteButton: {
+    flex: 1,
+    marginLeft: 8,
+  },
+});
 
 export default styles;
