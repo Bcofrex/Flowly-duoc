@@ -14,7 +14,7 @@ const SubscriptionDetails = () => {
   const navigation = useNavigation();
 
   const [subscription, setSubscription] = useState(null);
-  const [name, setName] = useState('');
+
   const [price, setPrice] = useState('');
   const [billingDate, setBillingDate] = useState('');
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ const SubscriptionDetails = () => {
     const foundSub = suscripciones.find((sub) => sub.id === id);
     if (foundSub) {
       setSubscription(foundSub);
-      setName(foundSub.nombre);
+
       setPrice(String(foundSub.precio));
       setBillingDate(foundSub.fechaFacturacion);
       navigation.setOptions({ title: foundSub.nombre });
@@ -36,13 +36,12 @@ const SubscriptionDetails = () => {
 
   // Guardar los cambios en la suscripción
   const handleSave = () => {
-    if (!name || !price || !billingDate) {
+    if (!price || !billingDate) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
 
     const updatedData = {
-      nombre: name,
       precio: parseFloat(price),
       fechaFacturacion: billingDate,
     };
@@ -94,14 +93,6 @@ const SubscriptionDetails = () => {
       <Card style={styles.card}>
         <Card.Title title="Editar Suscripción" />
         <Card.Content>
-          {/* Campo para editar el nombre de la suscripción */}
-          <TextInput
-            label="Nombre de la Suscripción"
-            value={name}
-            onChangeText={setName}
-            style={styles.input}
-            mode="outlined"
-          />
 
           {/* Campo para editar el precio */}
           <TextInput

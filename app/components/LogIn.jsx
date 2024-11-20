@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
+
+import { AuthContext } from '../../context/AuthContext';
 
 import styles from '../styles/components/login-styles';
 
@@ -9,13 +11,14 @@ const LogIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
+  const { login } = useContext(AuthContext);
   const [error, setError] = useState('');
 
   const handleLogin = () => {
-    // Validación simple de inicio de sesión
-    if (username === 'Admin' && password === 'Admin') {
-      // Redirige al Home después del inicio de sesión exitoso
+
+    const success = login({ username, password });
+
+    if (success) {
       router.push('/subs');
     } else {
       setError('Usuario o contraseña incorrectos');

@@ -18,48 +18,39 @@ export const SUBSCRIPTION_PLANS = {
     { label: 'Básico', value: 'Básico', price: 5940 },
     { label: 'Estándar', value: 'Estándar', price: 8320 },
     { label: 'Premium', value: 'Premium', price: 10700 },
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'Spotify': [
     { label: 'Individual', value: 'Individual', price: 4550 },
     { label: 'Duo', value: 'Duo', price: 5850 },
     { label: 'Familiar', value: 'Familiar', price: 7050 },
     { label: 'Estudiantes', value: 'Estudiantes', price: 2500 },
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'Disney+': [
-    { label: 'Plan Mensual', value: 'Mensual', price: 7200 },
-    { label: 'Plan Anual', value: 'Anual', price: 64900 },
-    { label: 'Personalizado', value: 'personalizado' }
+    { label: 'Estándar', value: 'Estándar', price: 9900 },
+    { label: 'Premium', value: 'Premium', price: 13500 },
   ],
   'Canva': [
     { label: 'Pro', value: 'Pro', price: 12490 },
     { label: 'Empresa', value: 'Empresa', price: 27990 },
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'ChatGPT Plus': [
-    { label: 'Plus', value: 'Plus', price: 20000 },
-    { label: 'Personalizado', value: 'personalizado' }
+    { label: 'Plus', value: 'Plus', price: 19500 },
+    { label: 'Team', value: 'Team', price: 24300 },
   ],
   'Amazon Prime': [
     { label: 'Mensual', value: 'Mensual', price: 5790 },
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'HBO Max': [
-    { label: 'Plan Mensual', value: 'Mensual', price: 7990 },
-    { label: 'Plan 3 Meses', value: '3Meses', price: 18900 },
-    { label: 'Plan Anual', value: 'Anual', price: 58900 },
-    { label: 'Personalizado', value: 'personalizado' }
+    { label: 'Básico', value: 'Básico', price: 5990 },
+    { label: 'Estándar', value: 'Estándar', price: 7990 },
+    { label: 'Platino', value: 'Platino', price: 9900 },
   ],
   'YouTube Premium': [
     { label: 'Individual', value: 'Individual', price: 4100 },
     { label: 'Familiar', value: 'Familiar', price: 6150 },
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'Wifi': [
-    { label: 'Personalizado', value: 'personalizado' }
   ],
   'Redes Móviles': [
-    { label: 'Personalizado', value: 'personalizado' }
   ],
 };
