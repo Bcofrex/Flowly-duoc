@@ -36,12 +36,12 @@ function AppDrawer() {
   return (
     <Drawer
       screenOptions={({ navigation }) => ({
-        headerStyle: { backgroundColor: '#004080' },
+        headerStyle: { backgroundColor: '#C6E7FF' },
         headerTintColor: 'white',
         headerLeft: () => (
           <Image
-            source={require('../assets/Logo/logo.png')}
-            style={{ width: 50, height: 50 }}
+            source={require('../assets/Logo/Flowly-sin-fondo.png')}
+            style={{ width: 140, height: 140 }}
           />
         ),
         headerRight: () =>
