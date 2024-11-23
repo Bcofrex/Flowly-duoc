@@ -10,7 +10,6 @@ import { MenuIcon } from './components/Icons';
 import styles from './styles/layout-styles';
 
 export default function RootLayout() {
-
   return (
     <AuthProvider>
       <SubscriptionProvider>
@@ -26,9 +25,10 @@ function AppDrawer() {
   const segments = useSegments();
 
   useEffect(() => {
-    const inLogin = segments.length === 0 || segments[0] === 'index';
+    const publicRoutes = ['login', 'signUp'];
+    const currentRoute = segments[0] || 'login';
 
-    if (!isAuthenticated && !inLogin) {
+    if (!isAuthenticated && !publicRoutes.includes(currentRoute)) {
       router.replace('/');
     }
   }, [isAuthenticated, segments]);
@@ -79,17 +79,17 @@ function CustomDrawerContent(props) {
       </TouchableOpacity>
       <View style={styles.menuItemsContainer}>
         <TouchableOpacity
-          onPress={() => { router.push('/subs/'); }}
+          onPress={() => router.push('/subs/')}
         >
           <Text style={styles.menuItem}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => { router.push('/user/'); }}
+          onPress={() => router.push('/user/')}
         >
           <Text style={styles.menuItem}>Tu perfil</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => { router.push('/settings/'); }}
+          onPress={() => router.push('/settings/')}
         >
           <Text style={styles.menuItem}>Configuración</Text>
         </TouchableOpacity>
@@ -97,7 +97,6 @@ function CustomDrawerContent(props) {
       <TouchableOpacity
         onPress={() => {
           logout();
-          router.push('/');
         }}
       >
         <Text style={styles.logoutItem}>Cerrar sesión</Text>

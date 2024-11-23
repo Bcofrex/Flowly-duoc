@@ -47,6 +47,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'red',
   },
+  registerLinkContainer: {
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  registerLink: {
+    fontSize: 14,
+    color: '#004080', 
+  },
+  registerLinkBold: {
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  },
+  
 });
 
 export default styles;

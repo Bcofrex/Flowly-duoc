@@ -46,7 +46,7 @@ export default function EditarPerfil() {
     Alert.alert('Perfil actualizado', 'Los cambios han sido guardados con éxito', [
       {
         text: 'OK',
-        onPress: () => router.push('/user/index'),
+        onPress: () => router.push('/user/'),
       },
     ]);
   };

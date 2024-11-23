@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 
@@ -12,16 +12,14 @@ const LogIn = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
   const { login } = useContext(AuthContext);
-  const [error, setError] = useState('');
 
   const handleLogin = () => {
+    const response = login({ username, password });
 
-    const success = login({ username, password });
-
-    if (success) {
-      router.push('/subs');
+    if (response.success) {
+      router.replace('/subs'); 
     } else {
-      setError('Usuario o contraseña incorrectos');
+      Alert.alert('Error', response.message);
     }
   };
 
@@ -50,13 +48,20 @@ const LogIn = () => {
         left={<TextInput.Icon name="lock" />}
       />
 
-      {/* Mensaje de error */}
-      {error ? <HelperText type="error">{error}</HelperText> : null}
-
       {/* Botón de inicio de sesión */}
       <Button mode="contained" onPress={handleLogin} style={styles.button}>
         Iniciar Sesión
       </Button>
+
+      {/* Botón para redirigir a registro */}
+      <TouchableOpacity
+        style={styles.registerLinkContainer}
+        onPress={() => router.push('/signUp')}
+      >
+        <Text style={styles.registerLink}>
+          ¿No tienes cuenta? <Text style={styles.registerLinkBold}>Regístrate aquí</Text>
+        </Text>
+      </TouchableOpacity>
 
       {/* Información de inicio de sesión */}
       <View style={styles.infoContainer}>
