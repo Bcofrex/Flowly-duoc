@@ -1,38 +1,49 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useRouter, useSegments } from 'expo-router';
+import apiClient from '../utils/apiClient';
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
-  const [user, setUser] = useState(null); // Información del usuario
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const segments = useSegments();
 
-  // Inicio de sesión
-  const login = ({ username, password }) => {
-    if (username === 'Admin' && password === 'Admin') {
+  // Registro de usuario
+  const signUp = async (email, password) => {
+    try {
+      const response = await apiClient.post('/users/register', { email, password });
+      setUser(response.data);
       setIsAuthenticated(true);
-      setUser({ username });
-      return { success: true };
+      return { success: true, message: 'Registro exitoso' };
+    } catch (error) {
+      return { success: false, message: error.response?.data?.message || 'Error al registrarse' };
     }
-    return { success: false, message: 'Usuario o contraseña incorrectos.' };
-  };  
+  };
 
-  // Registro (simulado, listo para conectarse a backend)
-  const signUp = ({ username, password }) => {
-    // Esta lógica se puede conectar fácilmente a un backend
-    if (username === 'Admin') {
-      return { success: false, message: 'Este usuario ya está registrado.' };
+  // Inicio de sesión
+  const login = async (email, password) => {
+    try {
+      const response = await apiClient.post('/users/login', { email, password });
+      setUser(response.data);
+      setIsAuthenticated(true);
+      return { success: true };
+    } catch (error) {
+      return { success: false, message: error.response?.data?.message || 'Usuario o contraseña incorrectos' };
     }
-    return { success: true, message: 'Registro exitoso. Por favor inicia sesión.' };
   };
 
   // Cerrar sesión
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    router.replace('/');
+  const logout = async () => {
+    try {
+      await apiClient.post('/users/logout');
+      setUser(null);
+      setIsAuthenticated(false);
+      router.replace('/');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error.message);
+    }
   };
 
   // Redirigir si no está autenticado
@@ -41,7 +52,7 @@ export function AuthProvider({ children }) {
     const currentRoute = segments[0] || 'login';
 
     if (!isAuthenticated && !publicRoutes.includes(currentRoute)) {
-      router.replace('/');
+      router.replace('/login');
     }
   }, [isAuthenticated, segments]);
 
