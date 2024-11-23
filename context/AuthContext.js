@@ -11,33 +11,50 @@ export function AuthProvider({ children }) {
   const segments = useSegments();
 
   // Registro de usuario
-  const signUp = async (email, password) => {
+  const signUp = async ({ nombre, apellido, correoElectronico, contrasenna }) => {
     try {
-      const response = await apiClient.post('/users/register', { email, password });
+      const response = await apiClient.post('/users/register', {
+        nombre,
+        apellido,
+        correoElectronico,
+        contrasenna,
+      });
+
+      // Usuario registrado correctamente
       setUser(response.data);
       setIsAuthenticated(true);
       return { success: true, message: 'Registro exitoso' };
     } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Error al registrarse' };
+      console.error('Error en el método signUp:', error);
+      const errorMessage =
+        error.response?.data?.message || 'Error al registrarse. Intenta nuevamente.';
+      return { success: false, message: errorMessage };
     }
   };
 
   // Inicio de sesión
-  const login = async (email, password) => {
+  const login = async ({ userId }) => {
     try {
-      const response = await apiClient.post('/users/login', { email, password });
-      setUser(response.data);
+      // Recuperar datos del usuario desde el backend
+      const userResponse = await apiClient.get(`/users/${userId}`);
+      console.log('Datos del usuario obtenidos del backend:', userResponse.data);
+
+      // Establecer el estado de usuario y autenticación
+      setUser(userResponse.data);
       setIsAuthenticated(true);
+
       return { success: true };
     } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Usuario o contraseña incorrectos' };
+      console.error('Error en el método login:', error);
+      const errorMessage =
+        error.response?.data?.error || 'Usuario o contraseña incorrectos.';
+      return { success: false, message: errorMessage };
     }
   };
 
   // Cerrar sesión
   const logout = async () => {
     try {
-      await apiClient.post('/users/logout');
       setUser(null);
       setIsAuthenticated(false);
       router.replace('/');
@@ -48,11 +65,11 @@ export function AuthProvider({ children }) {
 
   // Redirigir si no está autenticado
   useEffect(() => {
-    const publicRoutes = ['login', 'signUp'];
-    const currentRoute = segments[0] || 'login';
+    const publicRoutes = ['signUp'];
+    const currentRoute = segments[0] || '/';
 
     if (!isAuthenticated && !publicRoutes.includes(currentRoute)) {
-      router.replace('/login');
+      router.replace('/');
     }
   }, [isAuthenticated, segments]);
 

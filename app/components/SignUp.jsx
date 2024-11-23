@@ -7,26 +7,24 @@ import { AuthContext } from '../../context/AuthContext';
 import styles from '../styles/components/sign-up-styles';
 
 const RegisterScreen = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [correoElectronico, setCorreoElectronico] = useState('');
+  const [contrasenna, setContrasenna] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signUp } = useContext(AuthContext);
   const router = useRouter();
 
-  // Validaciones básicas
-  const isEmailValid = email.includes('@');
-  const isPasswordValid = password.length >= 6;
-  const isPasswordMatch = password === confirmPassword;
+  const isPasswordValid = contrasenna.length >= 6;
+  const isPasswordMatch = contrasenna === confirmPassword;
 
-  const handleRegister = () => {
-    // Validaciones
-    if (!username || !email || !password || !confirmPassword) {
+  const handleRegister = async () => {
+    if (!nombre || !apellido || !correoElectronico || !contrasenna || !confirmPassword) {
       Alert.alert('Error', 'Por favor completa todos los campos.');
       return;
     }
-    if (!isEmailValid) {
+    if (!correoElectronico.includes('@')) {
       Alert.alert('Error', 'Por favor ingresa un correo electrónico válido.');
       return;
     }
@@ -39,16 +37,13 @@ const RegisterScreen = () => {
       return;
     }
 
-    // Llamar a la función de registro del contexto
     setLoading(true);
-    const response = signUp({ username, email, password });
+    const response = await signUp({ nombre, apellido, correoElectronico, contrasenna });
 
     if (response.success) {
-      Alert.alert(
-        'Registro exitoso',
-        response.message,
-        [{ text: 'OK', onPress: () => router.replace('/login') }] // Redirigir al login
-      );
+      Alert.alert('Registro exitoso', response.message, [
+        { text: 'OK', onPress: () => router.replace('/') },
+      ]);
     } else {
       Alert.alert('Error', response.message);
     }
@@ -59,53 +54,53 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Regístrate</Text>
 
-      {/* Campo de nombre de usuario */}
+      {/* Campo de nombre */}
       <TextInput
-        label="Nombre de usuario"
-        value={username}
-        onChangeText={setUsername}
+        label="Nombre"
+        value={nombre}
+        onChangeText={setNombre}
+        mode="outlined"
+        style={styles.input}
+      />
+
+      {/* Campo de apellido */}
+      <TextInput
+        label="Apellido"
+        value={apellido}
+        onChangeText={setApellido}
         mode="outlined"
         style={styles.input}
       />
 
       {/* Campo de correo electrónico */}
       <TextInput
-        label="Correo electrónico"
-        value={email}
-        onChangeText={setEmail}
+        label="Correo Electrónico"
+        value={correoElectronico}
+        onChangeText={setCorreoElectronico}
         mode="outlined"
         style={styles.input}
         keyboardType="email-address"
       />
-      <HelperText type="error" visible={email && !isEmailValid}>
-        Ingresa un correo válido.
-      </HelperText>
 
       {/* Campo de contraseña */}
       <TextInput
         label="Contraseña"
-        value={password}
-        onChangeText={setPassword}
+        value={contrasenna}
+        onChangeText={setContrasenna}
         mode="outlined"
         style={styles.input}
         secureTextEntry
       />
-      <HelperText type="error" visible={password && !isPasswordValid}>
-        La contraseña debe tener al menos 6 caracteres.
-      </HelperText>
 
       {/* Campo de confirmación de contraseña */}
       <TextInput
-        label="Confirmar contraseña"
+        label="Confirmar Contraseña"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         mode="outlined"
         style={styles.input}
         secureTextEntry
       />
-      <HelperText type="error" visible={confirmPassword && !isPasswordMatch}>
-        Las contraseñas no coinciden.
-      </HelperText>
 
       {/* Botón de registro */}
       <Button
