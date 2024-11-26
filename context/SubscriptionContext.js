@@ -14,6 +14,10 @@ export const SubscriptionProvider = ({ children }) => {
   useEffect(() => {
     if (user?.id) {
       refreshSubscriptions();
+    } else {
+      // Reiniciar cuando no hay usuario
+      setSuscripciones([]);
+      setTotalCostoMensual(0);
     }
   }, [user]);
 
@@ -32,12 +36,14 @@ export const SubscriptionProvider = ({ children }) => {
       } else {
         // Caso esperado: usuario sin suscripciones
         setSuscripciones([]);
+        setTotalCostoMensual(0); // Reiniciar total mensual
       }
     } catch (error) {
       if (error.response?.status === 404) {
         // Caso esperado: usuario sin suscripciones
         console.log('No se encontraron suscripciones para el usuario.');
         setSuscripciones([]);
+        setTotalCostoMensual(0); // Reiniciar total mensual
       } else {
         // Errores no esperados
         console.error('Error crítico al obtener suscripciones:', error.message);
