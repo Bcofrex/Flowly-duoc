@@ -20,11 +20,12 @@ export default function RootLayout() {
 }
 
 function AppDrawer() {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext); 
   const router = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
+    console.log('Estado de autenticación:', { isAuthenticated, user });
     const publicRoutes = ['login', 'signUp'];
     const currentRoute = segments[0] || 'login';
 
@@ -60,8 +61,7 @@ function AppDrawer() {
       })}
       drawerPosition="right"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-    >
-    </Drawer>
+    />
   );
 }
 

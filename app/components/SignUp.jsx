@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { TextInput, Button, Text, HelperText } from 'react-native-paper';
+import { TextInput, Button, Text } from 'react-native-paper';
 
 import { AuthContext } from '../../context/AuthContext';
 import styles from '../styles/components/sign-up-styles';
@@ -36,19 +36,23 @@ const RegisterScreen = () => {
       Alert.alert('Error', 'Las contraseñas no coinciden.');
       return;
     }
-
+  
     setLoading(true);
     const response = await signUp({ nombre, apellido, correoElectronico, contrasenna });
-
+  
     if (response.success) {
       Alert.alert('Registro exitoso', response.message, [
         { text: 'OK', onPress: () => router.replace('/') },
       ]);
     } else {
-      Alert.alert('Error', response.message);
+      const emailError = response.message.includes('correoElectronico')
+        ? 'El correo electrónico ya está en uso.'
+        : response.message;
+  
+      Alert.alert('Error', emailError);
     }
     setLoading(false);
-  };
+  };  
 
   return (
     <View style={styles.container}>

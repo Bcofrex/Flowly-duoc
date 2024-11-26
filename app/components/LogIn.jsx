@@ -10,17 +10,24 @@ import styles from '../styles/components/login-styles';
 const LogIn = () => {
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [contrasenna, setContrasenna] = useState('');
-  const [loading, setLoading] = useState(false); // Control de carga
-  const [error, setError] = useState(null); // Manejo de errores en campos
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const [error, setError] = useState(''); // Error global
   const [snackbarVisible, setSnackbarVisible] = useState(false); // Confirmación de éxito
   const router = useRouter();
   const { login } = useContext(AuthContext);
 
-  const handleLogin = async () => {
-    setError(null); // Reinicia el error al intentar loguear
+  const validateFields = () => {
+    if (!correoElectronico.trim() || !contrasenna.trim()) {
+      setError('Por favor, completa todos los campos.');
+      return false;
+    }
+    return true;
+  };
 
-    if (!correoElectronico || !contrasenna) {
-      setError('Por favor completa todos los campos.');
+  const handleLogin = async () => {
+    setError(''); // Reinicia el mensaje de error
+
+    if (!validateFields()) {
       return;
     }
 
@@ -31,7 +38,7 @@ const LogIn = () => {
 
       if (response.success) {
         setSnackbarVisible(true); // Muestra confirmación antes de redirigir
-        setTimeout(() => router.replace('/subs'), 1500);
+        setTimeout(() => router.replace('/subs'), 2000); // Redirige después de 2 segundos
       } else {
         setError(response.message || 'Credenciales inválidas.');
       }
@@ -55,8 +62,14 @@ const LogIn = () => {
         mode="outlined"
         left={<TextInput.Icon name="email" />}
         keyboardType="email-address"
-        error={!!error && !correoElectronico}
+        error={!!error && !correoElectronico.trim()}
       />
+
+      {!correoElectronico.trim() && !!error && (
+        <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+          El correo electrónico es obligatorio.
+        </Text>
+      )}
 
       {/* Campo de contraseña */}
       <TextInput
@@ -67,9 +80,9 @@ const LogIn = () => {
         mode="outlined"
         secureTextEntry
         left={<TextInput.Icon name="lock" />}
-        error={!!error && !contrasenna}
+        error={!!error && !contrasenna.trim()}
       />
-      <HelperText type="error" visible={!!error && !contrasenna}>
+      <HelperText type="error" visible={!!error && !contrasenna.trim()}>
         La contraseña es obligatoria.
       </HelperText>
 
@@ -77,9 +90,9 @@ const LogIn = () => {
       <Button
         mode="contained"
         onPress={handleLogin}
-        style={styles.button}
+        style={[styles.button, (!correoElectronico.trim() || !contrasenna.trim() || loading) && styles.disabledButton]}
         loading={loading}
-        disabled={loading}
+        disabled={!correoElectronico.trim() || !contrasenna.trim() || loading}
       >
         Iniciar Sesión
       </Button>
@@ -96,7 +109,7 @@ const LogIn = () => {
       </TouchableOpacity>
 
       {/* Mensaje de error global */}
-      <HelperText type="error" visible={!!error && correoElectronico && contrasenna}>
+      <HelperText type="error" visible={!!error && correoElectronico.trim() && contrasenna.trim()}>
         {error}
       </HelperText>
 
@@ -104,7 +117,7 @@ const LogIn = () => {
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
-        duration={1500}
+        duration={2000} // Duración ajustada
       >
         ¡Inicio de sesión exitoso!
       </Snackbar>

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useRouter, useSegments } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../utils/apiClient';
 
 export const AuthContext = createContext();
@@ -9,6 +10,28 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
   const segments = useSegments();
+
+  // Cargar estado inicial desde AsyncStorage
+  useEffect(() => {
+    const loadAuthState = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('userId');
+        const storedAuthState = await AsyncStorage.getItem('isAuthenticated');
+
+        if (storedUserId && storedAuthState === 'true') {
+          const userResponse = await apiClient.get(`/users/getInfo/${storedUserId}`);
+          setUser({ id: storedUserId, ...userResponse.data }); // Asignar el UID
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Error al cargar el estado de autenticación:', error);
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    };
+
+    loadAuthState();
+  }, []);
 
   // Registro de usuario
   const signUp = async ({ nombre, apellido, correoElectronico, contrasenna }) => {
@@ -20,35 +43,41 @@ export function AuthProvider({ children }) {
         contrasenna,
       });
 
-      // Usuario registrado correctamente
-      setUser(response.data);
+      const { userId } = response.data;
+      const userResponse = await apiClient.get(`/users/getInfo/${userId}`);
+      setUser({ id: userId, ...userResponse.data }); // Asignar el UID
       setIsAuthenticated(true);
+
+      await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('isAuthenticated', 'true');
+
       return { success: true, message: 'Registro exitoso' };
     } catch (error) {
       console.error('Error en el método signUp:', error);
-      const errorMessage =
-        error.response?.data?.message || 'Error al registrarse. Intenta nuevamente.';
-      return { success: false, message: errorMessage };
+      return { success: false, message: 'Error al registrarse. Intenta nuevamente.' };
     }
   };
 
   // Inicio de sesión
-  const login = async ({ userId }) => {
+  const login = async ({ correoElectronico, contrasenna }) => {
     try {
-      // Recuperar datos del usuario desde el backend
-      const userResponse = await apiClient.get(`/users/${userId}`);
-      console.log('Datos del usuario obtenidos del backend:', userResponse.data);
+      const response = await apiClient.post('/users/login', { correoElectronico, contrasenna });
 
-      // Establecer el estado de usuario y autenticación
-      setUser(userResponse.data);
-      setIsAuthenticated(true);
+      if (response.data?.uid) {
+        const userResponse = await apiClient.get(`/users/getInfo/${response.data.uid}`);
+        setUser({ id: response.data.uid, ...userResponse.data }); // Asignar el UID
+        setIsAuthenticated(true);
 
-      return { success: true };
+        await AsyncStorage.setItem('userId', response.data.uid);
+        await AsyncStorage.setItem('isAuthenticated', 'true');
+
+        return { success: true };
+      } else {
+        throw new Error('UID no devuelto por el servidor.');
+      }
     } catch (error) {
       console.error('Error en el método login:', error);
-      const errorMessage =
-        error.response?.data?.error || 'Usuario o contraseña incorrectos.';
-      return { success: false, message: errorMessage };
+      return { success: false, message: 'Usuario o contraseña incorrectos.' };
     }
   };
 
@@ -57,6 +86,10 @@ export function AuthProvider({ children }) {
     try {
       setUser(null);
       setIsAuthenticated(false);
+
+      await AsyncStorage.removeItem('userId');
+      await AsyncStorage.removeItem('isAuthenticated');
+
       router.replace('/');
     } catch (error) {
       console.error('Error al cerrar sesión:', error.message);
