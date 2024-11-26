@@ -5,28 +5,46 @@
     "version": "1.0.0",
     "newArchEnabled": true,
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon.png", 
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/splash/splash.png", 
+      "resizeMode": "contain", 
+      "backgroundColor": "#ffffff" 
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "splash": {
+        "image": "./assets/splash/splash.png",
+        "resizeMode": "cover", 
+        "backgroundColor": "#ffffff" 
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/adaptive-icon.png", 
+        "backgroundColor": "#ffffff"
+      },
+      "splash": {
+        "image": "./assets/splash/splash.png",
+        "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icons/icon.png"
     },
     "plugins": [
       "expo-router"
     ],
-    "scheme": "your-app-scheme"
+    "scheme": "flowly",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1cfbac61-a9e5-46e9-9a13-8a467a7cb2af"
+      }
+    }
   }
 }
