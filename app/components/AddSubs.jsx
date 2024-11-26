@@ -12,7 +12,7 @@ import styles from '../styles/components/add-subs-styles';
 
 const AddSubs = () => {
   const router = useRouter();
-  const { agregarSuscripcion } = useContext(SubscriptionContext);
+  const { agregarSuscripcion, refreshSubscriptions } = useContext(SubscriptionContext); // Usar el método refreshSubscriptions
   const { user } = useContext(AuthContext); // Usar el usuario autenticado
 
   const [nombre, setNombre] = useState('');
@@ -87,22 +87,7 @@ const AddSubs = () => {
   const handleSubmit = async () => {
     setError(''); // Limpiar errores previos
     if (!validateFields()) return;
-  
-    if (!selectedSubscription) {
-      setError('Por favor selecciona una suscripción válida.');
-      return;
-    }
-  
-    if (!plan) {
-      setError('Por favor selecciona un plan válido.');
-      return;
-    }
-  
-    if (!fecha.match(/^\d{2}-\d{2}-\d{4}$/)) {
-      setError('El formato de fecha no es válido.');
-      return;
-    }
-  
+
     const nuevaSuscripcion = {
       userId: user.id,
       nombre: selectedSubscription.nombre,
@@ -112,12 +97,13 @@ const AddSubs = () => {
       tipoPlan: plan || 'Personalizado',
       imagen: `https://example.com/${selectedSubscription.nombre.toLowerCase()}-logo.png`, // Generación dinámica
     };
-  
+
     console.log('Datos enviados al backend:', nuevaSuscripcion);
-  
+
     try {
       setLoading(true);
       await agregarSuscripcion(nuevaSuscripcion);
+      await refreshSubscriptions(); // Actualizar la lista automáticamente
       router.push('/subs');
     } catch (error) {
       console.error('Error al añadir suscripción:', error);
@@ -126,7 +112,7 @@ const AddSubs = () => {
     } finally {
       setLoading(false);
     }
-  };    
+  };
 
   const handleConfirm = (date) => {
     // Convertir a "DD-MM-YYYY"
@@ -134,12 +120,12 @@ const AddSubs = () => {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     const formattedDate = `${day}-${month}-${year}`;
-  
+
     // Imprimir para verificar el formato
     console.log('Fecha seleccionada (formateada):', formattedDate);
     setFecha(formattedDate);
     hideDatePicker();
-  };  
+  };
 
   const hideDatePicker = () => setDatePickerVisible(false);
 

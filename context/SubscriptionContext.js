@@ -22,19 +22,26 @@ export const SubscriptionProvider = ({ children }) => {
     if (!user?.id) return;
     try {
       const response = await apiClient.get(`/subscriptions/getSubs/${user.id}`);
-      if (response.data.error) {
-        setSuscripciones([]);
-      } else {
+      if (response.status === 200 && response.data.length > 0) {
         const enrichedSubscriptions = response.data.map((sub) => ({
           ...sub,
           imagen: getLocalImage(sub.nombre), // Asignar la imagen local basada en el nombre
         }));
         setSuscripciones(enrichedSubscriptions);
         calculateTotalCosto(enrichedSubscriptions);
+      } else {
+        // Caso esperado: usuario sin suscripciones
+        setSuscripciones([]);
       }
     } catch (error) {
-      console.error('Error al obtener suscripciones:', error.message);
-      setSuscripciones([]);
+      if (error.response?.status === 404) {
+        // Caso esperado: usuario sin suscripciones
+        console.log('No se encontraron suscripciones para el usuario.');
+        setSuscripciones([]);
+      } else {
+        // Errores no esperados
+        console.error('Error crítico al obtener suscripciones:', error.message);
+      }
     }
   };
 
